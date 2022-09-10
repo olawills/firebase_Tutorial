@@ -1,3 +1,3 @@
 Firebase updated tutorial
 
-![](/screenshot/first.png | width=100) ![](/screenshot/second.png | width=100)
+![](/screenshot/first.png=350*250) ![](/screenshot/second.png=250*250)
