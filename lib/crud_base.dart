@@ -140,12 +140,64 @@ class _CrudBaseState extends State<CrudBase> {
         });
   }
 
-  Future<void> delete(String productId) async {
-    await products.doc(productId).delete();
+  //Future<void> delete(BuildContext context, String productId) async {
 
+  Future<void> logOutDialog(BuildContext context, String productId) {
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('You have deleted a product')));
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Do you want to delete selected item ',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            MaterialButton(
+              child: const Text(
+                'No',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                  color: Colors.black,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.green,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            MaterialButton(
+              color: Colors.red,
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () async {
+                await products.doc(productId).delete();
+              },
+            )
+          ],
+        );
+      },
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('You have deleted a product')));
+    );
   }
+
+  // await products.doc(productId).delete();
 
   @override
   Widget build(BuildContext context) {
@@ -180,9 +232,6 @@ class _CrudBaseState extends State<CrudBase> {
                           fontSize: 15,
                         ),
                       ),
-                      leading: Text(documentSnapshot['Department']
-                          .toString()
-                          .toUpperCase()),
                       trailing: SizedBox(
                         width: 100,
                         child: Row(
@@ -193,7 +242,11 @@ class _CrudBaseState extends State<CrudBase> {
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () => delete(documentSnapshot.id),
+                              onPressed: () =>
+                                  //  delete(context, documentSnapshot.id),
+                                  logOutDialog(context, documentSnapshot.id)
+                                      .whenComplete(
+                                          () => Navigator.pop(context)),
                             ),
                           ],
                         ),
